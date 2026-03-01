@@ -1,0 +1,35 @@
+python
+java
+javascript
+html
+css
+react
+angular
+vue
+node
+express
+mongodb
+mysql
+postgresql
+sql
+git
+github
+docker
+kubernetes
+aws
+azure
+rest
+api
+microservices
+backend
+frontend
+fullstack
+debugging
+testing
+ci
+cd
+linux
+oop
+data structures
+algorithms
+system design

@@ -2,122 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATS Resume Matcher</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: "Inter", "Segoe UI", Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f6f7fb;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            background: #ffffff;
-            width: 420px;
-            padding: 32px;
-            border-radius: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-
-        h1 {
-            margin: 0;
-            margin-bottom: 8px;
-            font-size: 22px;
-            font-weight: 600;
-            color: #111827;
-            text-align: center;
-        }
-
-        p {
-            margin: 0 0 24px 0;
-            font-size: 14px;
-            color: #6b7280;
-            text-align: center;
-        }
-
-        label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px dashed #d1d5db;
-            border-radius: 10px;
-            background: #fafafa;
-            font-size: 14px;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        input[type="file"]:hover {
-            border-color: #6366f1;
-            background: #f5f7ff;
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: none;
-            background: #6366f1;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        input[type="submit"]:hover {
-            background: #4f46e5;
-            transform: translateY(-1px);
-        }
-
-        .result {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 15px;
-            font-weight: 600;
-            color: #16a34a;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 </head>
 
 <body>
 
-    <div class="container">
-        <h1>ATS Resume Matcher</h1>
-        <p>Upload resume and job description to check compatibility</p>
+<div class="container">
+    <h1>ATS Resume Matcher</h1>
+    <p>Upload your resume and job description to check ATS compatibility</p>
 
-        <form method="POST" enctype="multipart/form-data">
-            
-            <label>Resume (PDF)</label>
-            <input type="file" name="resume_pdf" accept=".pdf" required>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Resume (PDF)</label>
+        <input type="file" name="resume_pdf" accept=".pdf" required>
 
-            <label>Job Description (PDF)</label>
-            <input type="file" name="jd_pdf" accept=".pdf" required>
+        <label>Job Description (PDF)</label>
+        <input type="file" name="jd_pdf" accept=".pdf" required>
 
-            <input type="submit" value="Check Match">
+        <input type="submit" value="Check ATS Score">
+    </form>
 
-        </form>
-
-        <div class="result">
-            {{ msg }}
-        </div>
+    {% if msg %}
+    <!-- 🎯 SCORE RING -->
+    <div class="score-wrapper">
+        <svg class="progress-ring" width="120" height="120">
+            <circle class="progress-ring__circle"
+                stroke-width="10"
+                fill="transparent"
+                r="50"
+                cx="60"
+                cy="60"/>
+        </svg>
+        <div class="score-text">{{ msg }}</div>
     </div>
+    {% endif %}
+
+    {% if recommendation %}
+    <div class="recommendation">
+        {{ recommendation }}
+    </div>
+    {% endif %}
+
+    {% if missing %}
+    <div class="missing">
+        <h3 onclick="toggleKeywords()">Potential Missing Technical Keywords ▾</h3>
+        <ul id="keywordList">
+            {% for word in missing %}
+            <li>{{ word }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // 🎯 Animated progress ring
+    const scoreText = document.querySelector(".score-text");
+    if (scoreText) {
+        const score = parseFloat(scoreText.innerText.match(/\d+(\.\d+)?/)[0]);
+        const circle = document.querySelector(".progress-ring__circle");
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+
+        const offset = circumference - (score / 100) * circumference;
+        setTimeout(() => {
+            circle.style.strokeDashoffset = offset;
+        }, 300);
+
+        if (score >= 70) circle.style.stroke = "#22c55e";
+        else if (score >= 40) circle.style.stroke = "#facc15";
+        else circle.style.stroke = "#ef4444";
+    }
+
+    // 🔽 Toggle keywords
+    function toggleKeywords() {
+        const list = document.getElementById("keywordList");
+        list.classList.toggle("open");
+    }
+</script>
 
 </body>
 </html>

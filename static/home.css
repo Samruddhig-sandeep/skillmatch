@@ -1,0 +1,131 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: #ffffff;
+    width: 500px;
+    padding: 34px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+p {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 15px;
+    display: block;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    margin-top: 22px;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(79,70,229,0.3);
+}
+
+/* 🎯 SCORE */
+.score-wrapper {
+    position: relative;
+    margin: 25px auto;
+    width: 120px;
+}
+
+.progress-ring__circle {
+    stroke: #22c55e;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease;
+}
+
+.score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* 🧠 Recommendation */
+.recommendation {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border-left: 6px solid #facc15;
+    font-size: 14px;
+}
+
+/* 🔽 Keywords */
+.missing {
+    margin-top: 20px;
+}
+
+.missing h3 {
+    cursor: pointer;
+    color: #dc2626;
+}
+
+.missing ul {
+    padding-left: 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.missing ul.open {
+    max-height: 160px;
+}
+
+.missing li {
+    margin-bottom: 6px;
+}
