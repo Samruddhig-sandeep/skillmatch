@@ -1,89 +1,201 @@
+/* ===================================================
+   GLOBAL RESET
+=================================================== */
+
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: "Inter", sans-serif;
+}
+
+html, body {
+    height: 100%;
 }
 
 body {
-    margin: 0;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
-    height: 100vh;
+    background: #0b1120;
+    color: #f1f5f9;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* ===================================================
+   BACKGROUND DEPTH
+=================================================== */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(99,102,241,0.2), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(139,92,246,0.2), transparent 40%);
+    z-index: -2;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    z-index: -3;
+}
+
+/* ===================================================
+   MAIN CONTAINER (PROPER SIZE)
+=================================================== */
+
 .container {
-    background: #ffffff;
-    width: 500px;
-    padding: 34px;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    animation: fadeIn 0.6s ease;
+    width: 32%;
+    min-width: 420px;
+    max-width: 550px;
+
+    padding: 40px 50px;
+    border-radius: 24px;
+
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.08);
+
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    animation: fadeIn 0.5s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* ===================================================
+   HEADINGS
+=================================================== */
+
 h1 {
     text-align: center;
+    font-size: 30px;
+    font-weight: 800;
     margin-bottom: 10px;
+
+    background: linear-gradient(to right, #818cf8, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 p {
     text-align: center;
-    color: #6b7280;
+    color: #94a3b8;
     font-size: 14px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+}
+
+/* ===================================================
+   FORM
+=================================================== */
+
+form {
+    margin-top: 30px;
 }
 
 label {
     font-weight: 600;
-    margin-top: 15px;
+    margin-top: 20px;
     display: block;
+    font-size: 14px;
 }
 
 input[type="file"] {
     width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border: 1px dashed #d1d5db;
-    border-radius: 8px;
-    background: #fafafa;
+    padding: 14px;
+    margin-top: 8px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: #f1f5f9;
+
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+input[type="file"]:hover {
+    border-color: #818cf8;
 }
 
 input[type="submit"] {
     width: 100%;
     padding: 14px;
-    margin-top: 22px;
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: white;
+    margin-top: 25px;
+
+    border-radius: 14px;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    background: linear-gradient(to right, #818cf8, #a78bfa);
+    color: white;
+
+    transition: 0.3s ease;
 }
 
 input[type="submit"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(79,70,229,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(139,92,246,0.4);
 }
 
-/* 🎯 SCORE */
+/* ===================================================
+   BULK BUTTON
+=================================================== */
+
+.bulk-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+
+    text-align: center;
+    text-decoration: none;
+
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 14px;
+
+    background: linear-gradient(to right, #6366f1, #7c3aed);
+    color: white;
+
+    transition: 0.3s ease;
+}
+
+.bulk-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(99,102,241,0.4);
+}
+
+/* ===================================================
+   SCORE RING
+=================================================== */
+
 .score-wrapper {
     position: relative;
-    margin: 25px auto;
+    margin: 35px auto;
     width: 120px;
 }
 
 .progress-ring__circle {
-    stroke: #22c55e;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.6s ease;
-}
+   }
 
 .score-text {
     position: absolute;
@@ -92,135 +204,45 @@ input[type="submit"]:hover {
     transform: translate(-50%, -50%);
     font-weight: 700;
     font-size: 14px;
-    text-align: center;
-}
+     }
 
-/* 🧠 Recommendation */
+/* ===================================================
+   RECOMMENDATION
+=================================================== */
+
 .recommendation {
-    margin-top: 20px;
-    padding: 14px;
-    border-radius: 12px;
-    background: #f8fafc;
+    margin-top: 25px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.05);
     border-left: 6px solid #facc15;
     font-size: 14px;
 }
 
-/* 🔽 Keywords */
+/* ===================================================
+   MISSING KEYWORDS
+=================================================== */
+
 .missing {
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .missing h3 {
     cursor: pointer;
-    color: #dc2626;
+    color: #ef4444;
 }
 
 .missing ul {
-    padding-left: 18px;
+    padding-left: 20px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
 }
 
 .missing ul.open {
-    max-height: 160px;
+    max-height: 250px;
 }
 
 .missing li {
     margin-bottom: 6px;
-}
-/* Make form position relative */
-form {
-    position: relative;
-}
-
-/* Align bulk button properly */
-.top-nav {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 15px;
-}
-
-/* Style Bulk Button */
-.bulk-btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    margin-top: 15px;
-    text-align: center;
-    text-decoration: none;
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: white;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.bulk-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(79,70,229,0.3);
-}
-
-/* Back button spacing */
-.bulk-btn {
-    margin-top: 18px;
-}
-
-/* ===== Ranking Table Styling ===== */
-
-.table-wrapper {
-    margin-top: 20px;
-    overflow-x: auto;
-}
-
-.ranking-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.ranking-table th {
-    background: #f3f4f6;
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-}
-
-.ranking-table td {
-    padding: 12px;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.ranking-table tr:hover {
-    background: #f9fafb;
-}
-
-/* Highlight top candidate */
-.top-rank {
-    background: #eef2ff;
-    font-weight: 600;
-}
-
-/* Score badges */
-.score-badge {
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.score-badge.high {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.score-badge.medium {
-    background: #fef9c3;
-    color: #854d0e;
-}
-
-.score-badge.low {
-    background: #fee2e2;
-    color: #991b1b;
 }

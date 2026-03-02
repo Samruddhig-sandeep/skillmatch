@@ -1,0 +1,371 @@
+/* ===================================================
+   GLOBAL RESET
+=================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* ===================================================
+   THEME VARIABLES
+=================================================== */
+
+body.light {
+    --bg-main: #f8fafc;
+    --text: #0f172a;
+    --sub: #475569;
+    --card: rgba(255,255,255,0.75);
+    --primary: #4f46e5;
+    --accent: #7c3aed;
+    --glow: rgba(99,102,241,0.35);
+    --divider: rgba(0,0,0,0.08);
+}
+
+body.dark {
+    --bg-main: #0b1120;
+    --text: #f1f5f9;
+    --sub: #94a3b8;
+    --card: rgba(15,23,42,0.75);
+    --primary: #818cf8;
+    --accent: #a78bfa;
+    --glow: rgba(139,92,246,0.45);
+    --divider: rgba(255,255,255,0.08);
+}
+
+/* ===================================================
+   BACKGROUND SYSTEM
+=================================================== */
+
+body {
+    min-height: 100vh;
+    background: var(--bg-main);
+    color: var(--text);
+    transition: 0.4s ease;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Soft glowing background accents */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(99,102,241,0.15), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(139,92,246,0.15), transparent 40%);
+    z-index: -2;
+}
+
+/* Subtle tech grid */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    z-index: -3;
+}
+
+/* ===================================================
+   NAVBAR
+=================================================== */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 120px;
+    backdrop-filter: blur(20px);
+    background: var(--card);
+    border-bottom: 1px solid var(--divider);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.brand {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.theme-btn {
+    padding: 12px 22px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.theme-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--glow);
+}
+
+/* ===================================================
+   HERO SPLIT SECTION
+=================================================== */
+
+.hero-split {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 140px 120px;
+    gap: 80px;
+    border-bottom: 1px solid var(--divider);
+}
+
+.hero-left {
+    flex: 1;
+}
+
+.hero-left h1 {
+    font-size: 88px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-tagline {
+    font-size: 24px;
+    margin-top: 25px;
+    font-weight: 500;
+}
+
+.hero-desc {
+    margin-top: 30px;
+    font-size: 19px;
+    line-height: 1.8;
+    color: var(--sub);
+    max-width: 520px;
+}
+
+.hero-btn {
+    margin-top: 40px;
+}
+
+/* ===================================================
+   CAROUSEL
+=================================================== */
+
+.carousel {
+    position: relative;
+    width: 600px;
+    height: 380px;
+    overflow: hidden;
+    border-radius: 28px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+}
+
+.slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+/* Navigation arrows */
+
+.nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    transition: 0.3s ease;
+}
+
+.nav:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+.prev { left: 15px; }
+.next { right: 15px; }
+
+/* Dots */
+
+.dots {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 6px;
+    background: white;
+    opacity: 0.5;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.dot.active {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* ===================================================
+   CARDS SECTION
+=================================================== */
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    padding: 120px 120px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--divider);
+}
+
+.card {
+    width: 600px;
+    padding: 70px;
+    border-radius: 28px;
+    background: var(--card);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--divider);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+    transition: 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.25);
+}
+
+.card h2 {
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.card p {
+    font-size: 19px;
+    color: var(--sub);
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+/* ===================================================
+   BUTTONS
+=================================================== */
+
+.btn {
+    text-decoration: none;
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    color: white;
+    transition: 0.3s ease;
+    display: inline-block;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px var(--glow);
+}
+
+/* ===================================================
+   FOOTER
+=================================================== */
+
+footer {
+    text-align: center;
+    padding: 80px;
+    margin-top: 80px;
+    color: var(--sub);
+    font-size: 15px;
+}
+
+/* ===================================================
+   FLOATING PARTICLE BACKGROUND
+=================================================== */
+
+.background-animation {
+    position: fixed;
+    inset: 0;
+    z-index: -5;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Create 3 layers for depth */
+
+.background-animation::before,
+.background-animation::after {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background-repeat: repeat;
+    animation: moveStars 60s linear infinite;
+    opacity: 0.4;
+}
+
+/* Small stars */
+.background-animation::before {
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 70% 80%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 40% 60%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 85% 20%, rgba(255,255,255,0.5), transparent);
+}
+
+/* Larger soft glow stars */
+.background-animation::after {
+    background-image:
+        radial-gradient(3px 3px at 50% 40%, rgba(139,92,246,0.4), transparent),
+        radial-gradient(4px 4px at 30% 70%, rgba(99,102,241,0.4), transparent),
+        radial-gradient(3px 3px at 75% 50%, rgba(139,92,246,0.3), transparent);
+    animation-duration: 90s;
+}
+
+/* Animation movement */
+@keyframes moveStars {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-50%);
+    }
+}

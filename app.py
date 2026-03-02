@@ -90,7 +90,6 @@ def extract_keywords(phrases, resume_text):
 
 # ---------------------------
 # CORE ATS SCORING FUNCTION
-# (Reusable for single & bulk)
 # ---------------------------
 def calculate_ats_score(resume_text, jd_text):
 
@@ -124,10 +123,18 @@ def calculate_ats_score(resume_text, jd_text):
 
 
 # ---------------------------
+# DASHBOARD ROUTE
+# ---------------------------
+@app.route("/")
+def dashboard():
+    return render_template("dashboard.html")
+
+
+# ---------------------------
 # SINGLE RESUME MODE
 # ---------------------------
-@app.route("/", methods=["GET", "POST"])
-def home():
+@app.route("/personal", methods=["GET", "POST"])
+def personal():
 
     if request.method == "POST":
         resume_pdf = request.files["resume_pdf"]
@@ -172,7 +179,6 @@ def rank_resumes():
     jd_pdf = request.files["job_description"]
     resume_files = request.files.getlist("resumes")
 
-    # ✅ ADD LIMIT CHECK HERE
     if len(resume_files) > 15:
         return render_template("bulk_ranking.html", error="Maximum 15 resumes allowed.")
 
@@ -193,6 +199,7 @@ def rank_resumes():
     ranked_results = sorted(results, key=lambda x: x["score"], reverse=True)
 
     return render_template("ranking_result.html", results=ranked_results)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

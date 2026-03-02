@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skillmatch | Resume Intelligence Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="dark">
+  <div class="background-animation"></div>
+
+<header class="navbar">
+    <div class="brand">Skillmatch</div>
+    <button id="themeToggle" class="theme-btn">Dark Mode</button>
+</header>
+
+<section class="hero-split">
+
+    <div class="hero-left">
+        <h1>Skillmatch</h1>
+        <p class="hero-tagline">
+            AI-Powered Resume Intelligence Platform
+        </p>
+        <p class="hero-desc">
+            Skillmatch analyzes resumes using NLP and semantic similarity models
+            to calculate ATS compatibility scores and deliver actionable insights
+            for candidates and hiring teams.
+        </p>
+
+        <a href="#cards" class="btn hero-btn">Explore Platform</a>
+    </div>
+
+    <div class="hero-right">
+        <div class="carousel">
+
+    <div class="slides">
+        <img src="{{ url_for('static', filename='img/slide1.jpg') }}" class="slide active">
+        <img src="{{ url_for('static', filename='img/slide2.jpg') }}" class="slide">
+        <img src="{{ url_for('static', filename='img/slide3.jpg') }}" class="slide">
+    </div>
+
+    <button class="nav prev">&#10094;</button>
+    <button class="nav next">&#10095;</button>
+
+    <div class="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</div>
+    </div>
+
+</section>
+
+<section id="cards" class="cards">
+
+    <div class="card">
+        <h2>Personal Use</h2>
+        <p>
+            Compare your resume against a job description and
+            receive an ATS match score with missing keyword insights.
+        </p>
+        <a href="/personal" class="btn">Launch Personal Tool</a>
+    </div>
+
+    <div class="card">
+        <h2>HR Dashboard</h2>
+        <p>
+            Upload multiple resumes and automatically rank candidates
+            using semantic similarity and ATS scoring logic.
+        </p>
+        <a href="/bulk" class="btn">Open HR Panel</a>
+    </div>
+
+</section>
+
+<footer>
+    © 2026 Skillmatch. AI Resume Intelligence System.
+</footer>
+
+<script>
+const toggle = document.getElementById("themeToggle");
+const body = document.body;
+
+toggle.addEventListener("click", () => {
+    body.classList.toggle("light");
+    body.classList.toggle("dark");
+    toggle.textContent = body.classList.contains("light") 
+        ? "Dark Mode" 
+        : "Light Mode";
+});
+</script>
+
+<script>
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+const nextBtn = document.querySelector(".next");
+const prevBtn = document.querySelector(".prev");
+
+let current = 0;
+let interval = setInterval(nextSlide, 4000);
+
+function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+
+    slides[index].classList.add("active");
+    dots[index].classList.add("active");
+}
+
+function nextSlide() {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+}
+
+function prevSlide() {
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+}
+
+nextBtn.addEventListener("click", () => {
+    nextSlide();
+    resetInterval();
+});
+
+prevBtn.addEventListener("click", () => {
+    prevSlide();
+    resetInterval();
+});
+
+dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+        current = index;
+        showSlide(current);
+        resetInterval();
+    });
+});
+
+function resetInterval() {
+    clearInterval(interval);
+    interval = setInterval(nextSlide, 4000);
+}
+
+/* Pause on hover */
+document.querySelector(".carousel").addEventListener("mouseenter", () => {
+    clearInterval(interval);
+});
+
+document.querySelector(".carousel").addEventListener("mouseleave", () => {
+    interval = setInterval(nextSlide, 4000);
+});
+</script>
+
+</body>
+</html>
