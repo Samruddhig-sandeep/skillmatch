@@ -2,98 +2,152 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ATS Resume Matcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Matcher | Analytics Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
 
 <div class="container">
-    <h1>ATS Resume Matcher</h1>
-    <p>Upload your resume and job description to check ATS compatibility</p>
+    <header class="main-header">
+        <h1>ATS Resume Matcher</h1>
+        <p>Advanced AI Analysis for your Career Growth</p>
+    </header>
 
-    <form method="POST" enctype="multipart/form-data">
-        <label>Job Description (PDF)</label>
-        <input type="file" name="jd_pdf" accept=".pdf" required>
+    <div class="upload-section">
+        <div class="upload-card">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Job Description (PDF)</label>
+                    <input type="file" name="jd_pdf" accept=".pdf" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Resume (PDF)</label>
+                    <input type="file" name="resume_pdf" accept=".pdf" required>
+                </div>
 
-        <label>Resume (PDF)</label>
-        <input type="file" name="resume_pdf" accept=".pdf" required>
-
-        <input type="submit" value="Check ATS Score">
-
-        <a href="/bulk" class="bulk-btn full-btn">Bulk Resume Ranking</a>
-    </form>
+                <div class="actions">
+                    <input type="submit" value="Analyze Compatibility" class="primary-btn">
+                    <a href="/bulk" class="bulk-btn">Bulk Ranking</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
     {% if msg %}
-    <!-- 🎯 SCORE RING -->
-    <div class="score-wrapper">
-        <svg class="progress-ring" width="120" height="120">
-            <circle class="progress-ring__circle"
-                stroke-width="10"
-                fill="transparent"
-                r="50"
-                cx="60"
-                cy="60"/>
-        </svg>
-        <div class="score-text">{{ msg }}</div>
-    </div>
-    {% endif %}
+    <div class="dashboard">
+        
+        <div class="left-col">
+            <div class="card score-card">
+                <h3>Overall Match</h3>
+                <div class="score-wrapper">
+                    <svg class="progress-ring" width="150" height="150">
+                        <circle class="progress-ring__bg" stroke-width="10" fill="transparent" r="65" cx="75" cy="75"/>
+                        <circle class="progress-ring__circle" stroke-width="10" fill="transparent" r="65" cx="75" cy="75"/>
+                    </svg>
+                    <div class="score-text">{{ msg }}</div>
+                </div>
+                <div class="recommendation">{{ recommendation }}</div>
+            </div>
 
-    {% if recommendation %}
-    <div class="recommendation">
-        {{ recommendation }}
-    </div>
-    {% endif %}
-
-    {% if missing %}
-    <div class="missing">
-        <h3 onclick="toggleKeywords()">Potential Missing Technical Keywords ▾</h3>
-        <ul id="keywordList">
-            {% for word in missing %}
-            <li>{{ word }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    {% if section_scores %}
-    <div class="section-analysis-box">
-        <h3>Section-wise ATS Breakdown</h3>
-
-        {% for section, score in section_scores.items() %}
-        <div class="score-row">
-            <span>{{ section }}</span>
-            <span>
-                {% if score == "N/A" %}
-                    {{ score }}
-                {% else %}
-                    {{ score }}%
-                {% endif %}
-            </span>
+            <div class="card chart-card">
+                <h3>Skill Gap Analysis</h3>
+                <canvas id="radarChart"></canvas>
+            </div>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    {% if tips %}
-    <div class="tips-box">
-        <h3>Resume Improvement Roadmap</h3>
+        <div class="right-col">
+            <div class="card chart-card">
+                <h3>Section Strength</h3>
+                <canvas id="barChart"></canvas>
+            </div>
 
-        {% for tip in tips %}
-        <div class="tip-card priority-{{ tip.priority.lower() }}">
-            <strong>{{ tip.priority }} Priority:</strong>
-            {{ tip.message }}
+            <div class="card">
+                <h3>Missing Keywords</h3>
+                <div class="keyword-grid">
+                    {% for word in missing %}
+                    <span class="keyword-pill">{{ word }}</span>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-</div>
 
-<script>
-    // 🎯 Animated progress ring
-    const scoreText = document.querySelector(".score-text");
-    if (scoreText) {
-        const score = parseFloat(scoreText.innerText.match(/\d+(\.\d+)?/)[0]);
+        <div class="card wide">
+            <h3>Improvement Roadmap</h3>
+            <div class="tips-container">
+                {% for tip in tips %}
+                <div class="tip-card priority-{{ tip.priority.lower() }}">
+                    <div class="tip-header">
+                        <span class="priority-tag">{{ tip.priority }}</span>
+                    </div>
+                    <p>{{ tip.message }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. SET UP DATA FROM FLASK ---
+        const sectionData = {{ section_scores | tojson }};
+        const labels = Object.keys(sectionData);
+        const rawScores = Object.values(sectionData);
+        const scores = rawScores.map(s => (s === "N/A" || s === null) ? 0 : parseFloat(s));
+
+        // --- 2. RADAR CHART ---
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Match Level',
+                    data: scores,
+                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                    borderColor: '#818cf8',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        angleLines: { color: 'rgba(255,255,255,0.1)' },
+                        pointLabels: { color: '#94a3b8', font: { size: 11 } },
+                        ticks: { display: false, stepSize: 20 },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // --- 3. BAR CHART ---
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: scores,
+                    backgroundColor: scores.map(s => s >= 70 ? '#22c55e' : (s >= 40 ? '#facc15' : '#ef4444')),
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { display: false }, ticks: { color: '#e2e8f0' } }
+                }
+            }
+        });
+
+        // --- 4. SCORE RING ANIMATION ---
+        const scoreVal = parseFloat("{{ msg }}".replace('%', ''));
         const circle = document.querySelector(".progress-ring__circle");
         const radius = circle.r.baseVal.value;
         const circumference = 2 * Math.PI * radius;
@@ -101,22 +155,17 @@
         circle.style.strokeDasharray = `${circumference} ${circumference}`;
         circle.style.strokeDashoffset = circumference;
 
-        const offset = circumference - (score / 100) * circumference;
         setTimeout(() => {
-            circle.style.strokeDashoffset = offset;
-        }, 300);
+            circle.style.transition = 'stroke-dashoffset 1.5s ease-out';
+            circle.style.strokeDashoffset = circumference - (scoreVal / 100) * circumference;
+            
+            if (scoreVal >= 70) circle.style.stroke = "#22c55e";
+            else if (scoreVal >= 40) circle.style.stroke = "#facc15";
+            else circle.style.stroke = "#ef4444";
+        }, 500);
+    </script>
+    {% endif %}
 
-        if (score >= 70) circle.style.stroke = "#22c55e";
-        else if (score >= 40) circle.style.stroke = "#facc15";
-        else circle.style.stroke = "#ef4444";
-    }
-
-    // 🔽 Toggle keywords
-    function toggleKeywords() {
-        const list = document.getElementById("keywordList");
-        list.classList.toggle("open");
-    }
-</script>
-
+</div>
 </body>
 </html>

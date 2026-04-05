@@ -1,36 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bulk Resume Ranking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Resume Ranking | HR Panel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 </head>
 <body>
 
 <div class="container">
+    <header class="main-header">
+        <h1>Bulk Talent Analysis</h1>
+        <p>Upload a job description and multiple resumes to identify top tier candidates.</p>
+    </header>
 
-    <h1>Bulk Resume Ranking</h1>
-    <p>Upload one job description and multiple resumes to rank candidates</p>
+    <div class="upload-card">
+        <form action="/rank_resumes" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Master Job Description (PDF)</label>
+                <input type="file" name="job_description" accept=".pdf" required>
+            </div>
 
-    <form action="/rank_resumes" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Candidate Resumes (Select Multiple PDFs)</label>
+                <input type="file" name="resumes" accept=".pdf" multiple required>
+            </div>
 
-        <label>Job Description (PDF)</label>
-        <input type="file" name="job_description" accept=".pdf" required>
+            <input type="submit" value="Start Ranking Analysis" class="primary-btn">
+        </form>
+        
+        {% if error %}
+            <div class="recommendation" style="border-left:4px solid #ef4444; color: #f87171; margin-top: 20px;">
+                <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
 
-        <label>Multiple Resumes (PDF)</label>
-        <input type="file" name="resumes" accept=".pdf" multiple required>
-
-        <input type="submit" value="Rank Resumes">
-
-    </form>
-
-    {% if error %}
-        <div class="recommendation" style="border-left:6px solid #dc2626;">
-            {{ error }}
-        </div>
-    {% endif %}
-
-    <a href="/" class="bulk-btn">← Back to ATS Checker</a>
-
+        <a href="/" class="bulk-btn" style="margin-top: 20px; border: none; opacity: 0.6; font-size: 0.9rem;">
+            ← Back to Personal ATS Checker
+        </a>
+    </div>
 </div>
 
 </body>

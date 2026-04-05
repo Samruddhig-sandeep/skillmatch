@@ -1,449 +1,204 @@
-
-/* ===================================================
-   GLOBAL RESET
-=================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-}
-
-html, body {
-    height: 100%;
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {
-    background: #0b1120;
-    color: #f1f5f9;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    position: relative;
-    overflow-x: hidden;
+    background: #020617;
+    color: #f8fafc;
+    min-height: 100vh;
+    padding: 50px 20px;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
 }
 
-/* ===================================================
-   BACKGROUND DEPTH
-=================================================== */
+.container { max-width: 1100px; margin: auto; }
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(99,102,241,0.2), transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(139,92,246,0.2), transparent 40%);
-    z-index: -2;
+/* Header */
+.main-header { text-align: center; margin-bottom: 40px; }
+.main-header h1 {
+    font-size: 3rem; font-weight: 800; margin-bottom: 10px;
+    background: linear-gradient(to right, #818cf8, #c084fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.main-header p { color: #94a3b8; font-size: 1.1rem; }
+
+/* Upload Section */
+.upload-card {
+    max-width: 600px; margin: 0 auto 50px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 35px; border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.3;
-    z-index: -3;
-}
-
-/* ===================================================
-   MAIN CONTAINER (PROPER SIZE)
-=================================================== */
-
-.container {
-    width: 32%;
-    min-width: 420px;
-    max-width: 550px;
-
-    padding: 40px 50px;
-    border-radius: 24px;
-
-    background: rgba(15,23,42,0.85);
-    backdrop-filter: blur(30px);
-    border: 1px solid rgba(255,255,255,0.08);
-
-    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===================================================
-   HEADINGS
-=================================================== */
-
-h1 {
-    text-align: center;
-    font-size: 30px;
-    font-weight: 800;
-    margin-bottom: 10px;
-
-    background: linear-gradient(to right, #818cf8, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-p {
-    text-align: center;
-    color: #94a3b8;
-    font-size: 14px;
-    margin-bottom: 30px;
-}
-
-/* ===================================================
-   FORM
-=================================================== */
-
-form {
-    margin-top: 30px;
-}
-
-label {
-    font-weight: 600;
-    margin-top: 20px;
-    display: block;
-    font-size: 14px;
-}
+.form-group { margin-bottom: 20px; }
+label { display: block; font-size: 0.9rem; font-weight: 600; color: #818cf8; margin-bottom: 8px; text-transform: uppercase; }
 
 input[type="file"] {
-    width: 100%;
-    padding: 14px;
-    margin-top: 8px;
-
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    color: #f1f5f9;
-
-    font-size: 14px;
-    transition: 0.3s ease;
+    width: 100%; padding: 12px; background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white;
 }
 
-input[type="file"]:hover {
-    border-color: #818cf8;
+.actions { display: flex; gap: 15px; margin-top: 25px; }
+.primary-btn {
+    flex: 2; background: #4f46e5; color: white; border: none;
+    padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer;
+    transition: 0.3s;
 }
-
-input[type="submit"] {
-    width: 100%;
-    padding: 14px;
-    margin-top: 25px;
-
-    border-radius: 14px;
-    border: none;
-
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-
-    background: linear-gradient(to right, #818cf8, #a78bfa);
-    color: white;
-
-    transition: 0.3s ease;
-}
-
-input[type="submit"]:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(139,92,246,0.4);
-}
-
-/* ===================================================
-   BULK BUTTON
-=================================================== */
-
+.primary-btn:hover { background: #6366f1; transform: translateY(-2px); }
 .bulk-btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    margin-top: 18px;
-
-    text-align: center;
-    text-decoration: none;
-
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 14px;
-
-    background: linear-gradient(to right, #6366f1, #7c3aed);
-    color: white;
-
-    transition: 0.3s ease;
+    flex: 1; text-align: center; text-decoration: none; color: white;
+    padding: 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
 }
 
-.bulk-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(99,102,241,0.4);
+/* Dashboard Grid */
+.dashboard {
+    display: grid; grid-template-columns: 350px 1fr; gap: 20px;
 }
 
-/* ===================================================
-   SCORE RING
-=================================================== */
+.left-col, .right-col { display: flex; flex-direction: column; gap: 20px; }
 
-.score-wrapper {
-    position: relative;
-    margin: 35px auto;
-    width: 120px;
+.card {
+    background: rgba(15, 23, 42, 0.8); border-radius: 20px;
+    padding: 25px; border: 1px solid rgba(255,255,255,0.05);
 }
 
-.progress-ring__circle {
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.6s ease;
-}
+.card h3 { font-size: 1rem; color: #a5b4fc; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
-.score-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: 700;
-    font-size: 14px;
-}
-
-/* ===================================================
-   RECOMMENDATION
-=================================================== */
+/* Score Ring */
+.score-card { text-align: center; }
+.score-wrapper { position: relative; width: 150px; margin: 0 auto 20px; }
+.score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 800; }
+.progress-ring__bg { stroke: rgba(255,255,255,0.05); }
+.progress-ring__circle { transform: rotate(-90deg); transform-origin: 50% 50%; stroke-linecap: round; }
 
 .recommendation {
-    margin-top: 25px;
-    padding: 16px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.05);
-    border-left: 6px solid #facc15;
-    font-size: 14px;
+    background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px;
+    font-size: 0.9rem; border-left: 4px solid #facc15; color: #facc15;
 }
 
-/* ===================================================
-   MISSING KEYWORDS
-=================================================== */
-
-.missing {
-    margin-top: 25px;
+/* Keywords */
+.keyword-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.keyword-pill {
+    background: rgba(139, 92, 246, 0.15); color: #c084fc;
+    padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
 }
 
-.missing h3 {
-    cursor: pointer;
-    color: #ef4444;
-}
-
-.missing ul {
-    padding-left: 20px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.missing ul.open {
-    max-height: 250px;
-}
-
-.missing li {
-    margin-bottom: 6px;
-}
-
-/* ===================================================
-   SECTION-WISE ATS BREAKDOWN
-=================================================== */
-
-.section-analysis-box {
-    margin-top: 30px;
-    padding: 18px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.05);
-}
-
-.section-analysis-box h3 {
-    margin-bottom: 15px;
-    color: #818cf8;
-}
-
-.score-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    font-size: 14px;
-}
-
-.score-row:last-child {
-    border-bottom: none;
-}
-
-/* ===================================================
-   RESUME IMPROVEMENT ROADMAP
-=================================================== */
-
-.tips-box {
-    margin-top: 25px;
-    padding: 18px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.05);
-}
-
-.tips-box h3 {
-    margin-bottom: 15px;
-    color: #22c55e;
-}
-
+/* Roadmap */
+.wide { grid-column: span 2; }
 .tip-card {
-    margin-bottom: 12px;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.5;
+    padding: 15px; border-radius: 12px; margin-bottom: 10px;
+    border-left: 5px solid transparent;
+}
+.priority-high { background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444; }
+.priority-medium { background: rgba(250, 204, 21, 0.1); border-left-color: #facc15; }
+.priority-low { background: rgba(34, 197, 94, 0.1); border-left-color: #22c55e; }
+.priority-tag { font-size: 0.7rem; font-weight: 800; margin-bottom: 5px; display: block; opacity: 0.8; }
+
+@media (max-width: 900px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .wide { grid-column: span 1; }
 }
 
-.priority-high {
-    background: rgba(239,68,68,0.12);
-    border-left: 4px solid #ef4444;
-}
 
-.priority-medium {
-    background: rgba(250,204,21,0.12);
-    border-left: 4px solid #facc15;
-}
 
-.priority-low {
-    background: rgba(59,130,246,0.12);
-    border-left: 4px solid #3b82f6;
-}
-/* ===================================================
-   RANKING TABLE
-=================================================== */
-
-.ranking-container {
-    width: 85%;
-    max-width: 1100px;
-}
-
+/* --- HR Dashboard Specifics --- */
 .table-wrapper {
-    margin-top: 30px;
-    overflow-x: auto;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    margin-bottom: 30px;
 }
 
 .ranking-table {
     width: 100%;
     border-collapse: collapse;
-    background: rgba(255,255,255,0.04);
-    border-radius: 16px;
-    overflow: hidden;
-}
-
-.ranking-table th,
-.ranking-table td {
-    padding: 16px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-align: left;
 }
 
 .ranking-table th {
-    background: rgba(99,102,241,0.15);
-    color: #c4b5fd;
-    font-weight: 700;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #818cf8;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.ranking-table tr:hover {
-    background: rgba(255,255,255,0.03);
+.ranking-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: #e2e8f0;
 }
 
 .top-rank {
-    background: rgba(34,197,94,0.08);
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent);
 }
 
 .score-badge {
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.85rem;
 }
 
-.score-badge.high {
-    background: rgba(34,197,94,0.15);
-    color: #22c55e;
-}
+.score-badge.high { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.score-badge.medium { background: rgba(250, 204, 21, 0.2); color: #fbbf24; }
+.score-badge.low { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
-.score-badge.medium {
-    background: rgba(250,204,21,0.15);
-    color: #facc15;
+.insight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
 }
-
-.score-badge.low {
-    background: rgba(239,68,68,0.15);
-    color: #ef4444;
-}
-
-/* ===================================================
-   INSIGHT BOXES
-=================================================== */
 
 .insight-box {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.05);
-}
-
-.insight-box h3 {
-    margin-bottom: 16px;
-    color: #818cf8;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .insight-row {
     display: flex;
     justify-content: space-between;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
 }
 
-.insight-row:last-child {
-    border-bottom: none;
+.insight-row span:last-child {
+    color: #94a3b8;
+    font-size: 0.8rem;
 }
-
-/* ===================================================
-   READINESS CARDS
-=================================================== */
 
 .readiness-card {
-    margin-bottom: 12px;
-    padding: 14px;
+    padding: 15px;
     border-radius: 12px;
-    font-size: 14px;
+    margin-bottom: 10px;
     font-weight: 600;
+    display: flex;
+    justify-content: space-between;
 }
 
-.high-ready {
-    background: rgba(34,197,94,0.12);
-    border-left: 4px solid #22c55e;
-}
-
-.moderate-ready {
-    background: rgba(250,204,21,0.12);
-    border-left: 4px solid #facc15;
-}
-
-.low-ready {
-    background: rgba(239,68,68,0.12);
-    border-left: 4px solid #ef4444;
-}
-
-/* ===================================================
-   TRAINING TOPICS
-=================================================== */
+.high-ready { background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
+.moderate-ready { background: rgba(250, 204, 21, 0.1); color: #fbbf24; border: 1px solid rgba(250, 204, 21, 0.2); }
+.low-ready { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
 
 .training-topic {
-    margin-bottom: 10px;
-    padding: 12px;
-    border-radius: 12px;
-    background: rgba(99,102,241,0.12);
-    border-left: 4px solid #818cf8;
-    font-size: 14px;
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(99, 102, 241, 0.1);
+    color: #818cf8;
+    border-radius: 10px;
+    margin: 5px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }

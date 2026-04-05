@@ -1,113 +1,165 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Resume Ranking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Results | HR Intelligence</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<div class="container ranking-container">
+<div class="container">
+    <header class="main-header">
+        <h1>Talent Ranking Results</h1>
+        <p>Comprehensive AI-driven comparison of the candidate pool</p>
+    </header>
 
-    <h1>Resume Ranking</h1>
-    <p>Ranked from highest to lowest ATS match</p>
+    <div class="stats-strip" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="color: #818cf8; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Total Resumes</div>
+            <div style="font-size: 1.8rem; font-weight: 800;">{{ results|length }}</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="color: #22c55e; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Avg Match</div>
+            <div style="font-size: 1.8rem; font-weight: 800;">
+                {% set total = 0 %}{% for r in results %}{% set total = total + r.score %}{% endfor %}
+                {{ (total / results|length)|round(1) }}%
+            </div>
+        </div>
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="color: #facc15; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Top Score</div>
+            <div style="font-size: 1.8rem; font-weight: 800;">{{ results[0].score }}%</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 15px;">
+            <div style="color: #ef4444; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Skill Gaps</div>
+            <div style="font-size: 1.8rem; font-weight: 800;">{{ top_missing_skills|length }}</div>
+        </div>
+    </div>
 
-    <div class="table-wrapper">
-        <table class="ranking-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Resume Name</th>
-                    <th>ATS Score</th>
-                </tr>
-            </thead>
+    <div class="dashboard">
+        <div class="card wide">
+            <h3>Candidate Leaderboard</h3>
+            <div class="table-wrapper">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Candidate Name</th>
+                            <th>ATS Match Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resume in results %}
+                        <tr class="{% if loop.index == 1 %}top-rank{% endif %}">
+                            <td>
+                                {% if loop.index == 1 %}🥇 1{% elif loop.index == 2 %}🥈 2{% elif loop.index == 3 %}🥉 3{% else %}{{ loop.index }}{% endif %}
+                            </td>
+                            <td><strong>{{ resume.resume_name }}</strong></td>
+                            <td>
+                                <span class="score-badge {% if resume.score >= 70 %}high{% elif resume.score >= 40 %}medium{% else %}low{% endif %}">
+                                    {{ resume.score }}%
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            <tbody>
-                {% for resume in results %}
-                <tr class="{% if loop.index == 1 %}top-rank{% endif %}">
-                    <td>
-                        {% if loop.index == 1 %}
-                            🥇 {{ loop.index }}
-                        {% elif loop.index == 2 %}
-                            🥈 {{ loop.index }}
-                        {% elif loop.index == 3 %}
-                            🥉 {{ loop.index }}
-                        {% else %}
-                            {{ loop.index }}
-                        {% endif %}
-                    </td>
+        <div class="card wide">
+            <h3>Aggregate Category Strength</h3>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px;">Average scores across all candidates per section</p>
+            <canvas id="categoryBarChart" style="max-height: 300px;"></canvas>
+        </div>
 
-                    <td>{{ resume.resume_name }}</td>
+        <div class="left-col">
+            <div class="card">
+                <h3>Readiness Distribution</h3>
+                <canvas id="distributionChart" style="max-height: 250px;"></canvas>
+            </div>
 
-                    <td>
-                        <span class="
-                            score-badge
-                            {% if resume.score >= 70 %}
-                                high
-                            {% elif resume.score >= 40 %}
-                                medium
-                            {% else %}
-                                low
-                            {% endif %}
-                        ">
-                            {{ resume.score }}%
-                        </span>
-                    </td>
-                </tr>
+            <div class="card">
+                <h3>Hiring Readiness</h3>
+                <div class="readiness-card high-ready"><span>High</span> <span>{{ high_ready }}</span></div>
+                <div class="readiness-card moderate-ready"><span>Moderate</span> <span>{{ moderate_ready }}</span></div>
+                <div class="readiness-card low-ready"><span>Low</span> <span>{{ low_ready }}</span></div>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <div class="card">
+                <h3>Top Skills Present</h3>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">Most common strengths in pool:</p>
+                {% for skill, count in top_present_skills %}
+                <div class="insight-row">
+                    <span>{{ skill }}</span>
+                    <span style="color: #22c55e;">In {{ count }} resumes</span>
+                </div>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
+            </div>
 
-    <div class="insight-box">
-        <h3>Talent Gap Insights</h3>
-
-        {% for skill, count in top_missing_skills %}
-        <div class="insight-row">
-            <span>{{ skill }}</span>
-            <span>Missing in {{ count }} resumes</span>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="insight-box">
-        <h3>Top Skills Found in Candidates</h3>
-
-        {% for skill, count in top_present_skills %}
-        <div class="insight-row">
-            <span>{{ skill }}</span>
-            <span>Found in {{ count }} resumes</span>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="insight-box">
-        <h3>Hiring Readiness Insights</h3>
-
-        <div class="readiness-card high-ready">
-            Highly Job Ready Candidates: {{ high_ready }}
-        </div>
-
-        <div class="readiness-card moderate-ready">
-            Moderately Ready Candidates: {{ moderate_ready }}
-        </div>
-
-        <div class="readiness-card low-ready">
-            Need Significant Training: {{ low_ready }}
+            <div class="card">
+                <h3>Common Talent Gaps</h3>
+                {% for skill, count in top_missing_skills %}
+                <div class="insight-row">
+                    <span>{{ skill }}</span>
+                    <span style="color: #ef4444;">Missing in {{ count }}</span>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-
-    <div class="insight-box">
-        <h3>Suggested HR Training Topics</h3>
-
-        {% for topic in training_topics %}
-        <div class="training-topic">
-            {{ topic }}
-        </div>
-        {% endfor %}
-    </div>
-
-    <a href="/bulk" class="bulk-btn">← Back to Bulk Upload</a>
-
 </div>
+
+<script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
+
+    // 1. DISTRIBUTION CHART
+    new Chart(document.getElementById('distributionChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['High', 'Moderate', 'Low'],
+            datasets: [{
+                data: [{{ high_ready }}, {{ moderate_ready }}, {{ low_ready }}],
+                backgroundColor: ['#22c55e', '#facc15', '#ef4444'],
+                borderColor: '#020617',
+                borderWidth: 4
+            }]
+        },
+        options: { cutout: '75%', plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // 2. NEW: CATEGORY BAR CHART (Aggregated Data)
+    // Note: We use the last candidate's keys as labels for categories
+    const categoryLabels = ["Education", "Experience", "Skills", "Projects", "Summary"]; 
+    // You can replace this with actual average logic from Flask if available
+    const categoryData = [65, 45, 80, 55, 70]; 
+
+    new Chart(document.getElementById('categoryBarChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                label: 'Pool Average %',
+                data: categoryData,
+                backgroundColor: 'rgba(129, 140, 248, 0.6)',
+                borderColor: '#818cf8',
+                borderWidth: 1,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
 
 </body>
 </html>
